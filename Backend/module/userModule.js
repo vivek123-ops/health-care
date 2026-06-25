@@ -35,13 +35,22 @@ const userModule = new mongoose.Schema({
     type: String,
     default: "",
   },
-  disease: {
+  disease: [
+    {
+      type: String,
+    },
+  ],
+  medicine: [
+    {
+      type: String,
+      default: "",
+    },
+  ],
+  height: {
     type: String,
-    default: "",
   },
-  medicine: {
+  address: {
     type: String,
-    default: "",
   },
   education: {
     type: String,
