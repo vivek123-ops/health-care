@@ -1,5 +1,5 @@
 const verifyUser = require("../middleware/verifyUser");
-const appointmentController = require("../controller/appointmentController");
+const appointmentController = require("../controller/AppointmentController");
 
 router.post(
   "/appointment/book",
