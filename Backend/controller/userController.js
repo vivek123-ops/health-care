@@ -1,0 +1,69 @@
+const express = require("express");
+const userModule = require("../module/userModule");
+
+const getprofile = async (req, res) => {
+  try {
+    const userData = await userModule.findById(req.userId);
+    if (!userData) {
+      return res.status(400).json({
+        success: false,
+        message: "user not find",
+      });
+    }
+    res.status(200).json({
+      success: true,
+      userData,
+    });
+  } catch (error) {
+    res.status(400).json({
+      success: false,
+      message: "error from getprofile",
+    });
+  }
+};
+
+const updateProfile = async (req, res) => {
+  try {
+    const {
+      bloodGroup,
+      disease,
+      medicine,
+      allergies,
+      height,
+      weight,
+      address,
+      emergencyContact,
+    } = req.body;
+    const findUser = await userModule.findById(req.userId).select("-password");
+    if (!findUser) {
+      return res.status(400).json({
+        success: false,
+        message: "user not find ",
+      });
+    }
+    findUser.bloodGroup = bloodGroup ?? findUser.bloodGroup;
+    findUser.disease = disease ?? findUser.disease;
+    findUser.medicine = medicine ?? findUser.medicine;
+    findUser.allergies = allergies ?? findUser.allergies;
+    findUser.height = height ?? findUser.height;
+    findUser.weight = weight ?? findUser.weight;
+    findUser.address = address ?? findUser.address;
+    findUser.emergencyContact = emergencyContact ?? findUser.emergencyContact;
+    await findUser.save();
+    res.status(200).json({
+      success: true,
+      message: "Profile Updated Successfully",
+      user: findUser,
+    });
+  } catch (error) {
+    res.status(400).json({
+      success: false,
+      message: "error from updateProfile",
+    });
+  }
+};
+
+module.exports = {
+  getprofile,
+  updateProfile,
+};

@@ -1,66 +1,123 @@
 const mongoose = require("mongoose");
 
-const userModule = new mongoose.Schema({
-  username: {
-    type: String,
-    required: true,
-  },
-  profileImage: {
-    type: String,
-    default: "",
-  },
-  password: {
-    type: String,
-    required: true,
-  },
-  age: {
-    type: String,
-    required: true,
-  },
-  phone: {
-    type: String,
-    require: true,
-  },
-  email: {
-    type: String,
-    require: true,
-    unique: true,
-  },
-  userType: {
-    type: String,
-    enum: ["user", "doctor", "admin"],
-    default: "user",
-  },
-  bloodgroup: {
-    type: String,
-    default: "",
-  },
-  disease: [
-    {
+const userSchema = new mongoose.Schema(
+  {
+    username: {
       type: String,
+      required: true,
+      trim: true,
     },
-  ],
-  medicine: [
-    {
+
+    profileImage: {
       type: String,
       default: "",
     },
-  ],
-  height: {
-    type: String,
-  },
-  address: {
-    type: String,
-  },
-  education: {
-    type: String,
-  },
-  exprience: {
-    type: String,
-  },
-  specialist: {
-    type: String,
-  },
-});
 
-module.exports = mongoose.model("user", userModule);
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+      lowercase: true,
+      trim: true,
+    },
+
+    password: {
+      type: String,
+      required: true,
+    },
+
+    age: {
+      type: Number,
+      required: true,
+    },
+
+    phone: {
+      type: String,
+      required: true,
+    },
+
+    address: {
+      type: String,
+      default: "",
+    },
+
+    userType: {
+      type: String,
+      enum: ["user", "doctor", "admin"],
+      default: "user",
+    },
+
+    bloodgroup: {
+      type: String,
+      enum: ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"],
+      default: "",
+    },
+
+    height: {
+      type: String,
+      default: "",
+    },
+
+    // ==========================
+    // User Medical Information
+    // ==========================
+
+    disease: [
+      {
+        type: String,
+      },
+    ],
+
+    medicine: [
+      {
+        type: String,
+      },
+    ],
+
+    // ==========================
+    // Doctor Information
+    // ==========================
+
+    education: {
+      type: String,
+      default: "",
+    },
+
+    experience: {
+      type: String,
+      default: "",
+    },
+
+    specialist: {
+      type: String,
+      default: "",
+    },
+
+    hospital: {
+      type: String,
+      default: "",
+    },
+
+    consultationFee: {
+      type: Number,
+      default: 0,
+    },
+
+    availableDays: [
+      {
+        type: String,
+      },
+    ],
+
+    availableTime: [
+      {
+        type: String,
+      },
+    ],
+  },
+  {
+    timestamps: true,
+  },
+);
+
+module.exports = mongoose.model("User", userSchema);

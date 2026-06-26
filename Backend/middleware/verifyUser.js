@@ -8,7 +8,7 @@ const verifyUser = async (req, res, next) => {
     next();
   } catch (error) {
     res.status(401).json({
-      message: "user not verify",
+      message: "please login first",
     });
   }
 };
