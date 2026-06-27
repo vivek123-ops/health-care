@@ -1,14 +1,21 @@
 const jwt = require("jsonwebtoken");
 
-const verifyUser = async (req, res, next) => {
+const verifyUser = (req, res, next) => {
   try {
     const token = req.headers.authorization;
+
+    console.log(token); // <-- ye bhi add karo
+
     const decoded = jwt.verify(token, "mysecretkey");
+
     req.userId = decoded.userId;
+
     next();
   } catch (error) {
-    res.status(401).json({
-      message: "please login first",
+    console.log(error);
+
+    return res.status(401).json({
+      message: "User not verified",
     });
   }
 };

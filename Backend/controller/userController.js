@@ -4,17 +4,20 @@ const userModule = require("../module/userModule");
 const getprofile = async (req, res) => {
   try {
     const userData = await userModule.findById(req.userId);
+    console.log("UserId:", req.userId);
     if (!userData) {
       return res.status(400).json({
         success: false,
         message: "user not find",
       });
     }
+    console.log("UserId:", req.userId);
     res.status(200).json({
       success: true,
-      userData,
+      user: userData,
     });
   } catch (error) {
+    console.log(error);
     res.status(400).json({
       success: false,
       message: "error from getprofile",

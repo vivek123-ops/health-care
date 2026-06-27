@@ -10,7 +10,7 @@ const bcrypt = require("bcrypt");
 const register = async (req, res) => {
   try {
     const { username, age, password, phone, email, userType } = req.body;
-    const emailexist = await userModule.findOne({ email });
+    const emailexist = await user.findOne({ email });
     if (emailexist) {
       return res.status(400).json({
         success: false,
@@ -124,12 +124,13 @@ const Login = async (req, res) => {
         expiresIn: "7d",
       },
     );
-    res.status(400).json({
-      success: false,
+    res.status(200).json({
+      success: true,
       message: "welcome",
       token,
     });
   } catch (error) {
+    console.log(error);
     res.status(400).json({
       success: false,
       message: "problem arive login",

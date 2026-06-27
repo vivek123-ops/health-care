@@ -1,12 +1,16 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const Auth = require("./routers/AuthRouter");
+const cors = require("cors");
+const user = require("./routers/userRouter");
 
 const app = express();
+app.use(cors());
 app.use(express.json());
 
 // all router
 app.use("/api", Auth);
+app.use("/api", user);
 
 const server = async (req, res) => {
   try {
