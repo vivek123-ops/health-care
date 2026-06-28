@@ -1,13 +1,28 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { jwtDecode } from "jwt-decode";
 
 function Navbar() {
   const navigate = useNavigate();
-
   const token = localStorage.getItem("token");
+
+  let userType = null;
+
+  try {
+    if (token) {
+      const decoded = jwtDecode(token);
+      userType = decoded.userType;
+    }
+  } catch (error) {
+    localStorage.removeItem("token");
+    navigate("/login");
+  }
+
+  console.log(userType);
 
   const handleLogout = () => {
     localStorage.removeItem("token");
+    localStorage.removeItem("userType");
     navigate("/login");
   };
 
@@ -27,7 +42,7 @@ function Navbar() {
     logo: {
       fontSize: "28px",
       fontWeight: "bold",
-      color: "#0d6efd",
+      color: "#0D6EFD",
       textDecoration: "none",
     },
 
@@ -52,10 +67,10 @@ function Navbar() {
 
     loginBtn: {
       padding: "10px 20px",
-      border: "2px solid #0d6efd",
+      border: "2px solid #0D6EFD",
       borderRadius: "8px",
       background: "white",
-      color: "#0d6efd",
+      color: "#0D6EFD",
       cursor: "pointer",
       fontWeight: "600",
     },
@@ -64,7 +79,7 @@ function Navbar() {
       padding: "10px 20px",
       border: "none",
       borderRadius: "8px",
-      background: "#0d6efd",
+      background: "#0D6EFD",
       color: "white",
       cursor: "pointer",
       fontWeight: "600",
@@ -83,32 +98,55 @@ function Navbar() {
 
   return (
     <nav style={styles.navbar}>
+      {/* Logo */}
       <Link to="/" style={styles.logo}>
         ❤️ PulseCare
       </Link>
 
+      {/* Menu */}
       <div style={styles.menu}>
         <Link to="/" style={styles.link}>
           Home
         </Link>
 
-        <Link to="/doctor" style={styles.link}>
-          Doctors
-        </Link>
+        {token && userType === "user" && (
+          <>
+            <Link to="/doctor" style={styles.link}>
+              Doctors
+            </Link>
 
-        <Link to="/appointment" style={styles.link}>
-          Appointment
-        </Link>
+            <Link to="/appointment" style={styles.link}>
+              Appointment
+            </Link>
 
-        <Link to="/emergency" style={styles.link}>
-          Emergency
-        </Link>
+            <Link to="/emergency" style={styles.link}>
+              Emergency
+            </Link>
 
-        <Link to="/profile" style={styles.link}>
-          Profile
-        </Link>
+            <Link to="/profile" style={styles.link}>
+              My Profile
+            </Link>
+          </>
+        )}
+
+        {token && userType === "doctor" && (
+          <>
+            <Link to="/doctorprofile" style={styles.link}>
+              My Profile
+            </Link>
+
+            <Link to="/appointments" style={styles.link}>
+              Appointments
+            </Link>
+
+            <Link to="/schedule" style={styles.link}>
+              Schedule
+            </Link>
+          </>
+        )}
       </div>
 
+      {/* Right Side */}
       <div style={styles.right}>
         {token ? (
           <button style={styles.logoutBtn} onClick={handleLogout}>

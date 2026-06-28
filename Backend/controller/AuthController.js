@@ -115,9 +115,10 @@ const Login = async (req, res) => {
       });
     }
 
-    const token = await jwt.sign(
+    const token = jwt.sign(
       {
         userId: emailexit._id,
+        userType: emailexit.userType,
       },
       "mysecretkey",
       {

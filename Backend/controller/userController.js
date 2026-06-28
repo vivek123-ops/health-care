@@ -52,6 +52,23 @@ const updateProfile = async (req, res) => {
     findUser.weight = weight ?? findUser.weight;
     findUser.address = address ?? findUser.address;
     findUser.emergencyContact = emergencyContact ?? findUser.emergencyContact;
+
+    if (findUser.userType === "doctor") {
+      findUser.specialist = req.body.specialist ?? findUser.specialist;
+
+      findUser.education = req.body.education ?? findUser.education;
+
+      findUser.experience = req.body.experience ?? findUser.experience;
+
+      findUser.hospital = req.body.hospital ?? findUser.hospital;
+
+      findUser.consultationFee =
+        req.body.consultationFee ?? findUser.consultationFee;
+
+      findUser.availableDays = req.body.availableDays ?? findUser.availableDays;
+
+      findUser.availableTime = req.body.availableTime ?? findUser.availableTime;
+    }
     await findUser.save();
     res.status(200).json({
       success: true,

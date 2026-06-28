@@ -6,6 +6,7 @@ import Login from "./Pages/Login";
 import Register from "./Pages/Register";
 import Verify from "./Pages/Verify";
 import Profile from "./Pages/Profile";
+import DoctorProfile from "./Pages/DoctorProfile";
 
 const App = () => {
   return (
@@ -17,6 +18,7 @@ const App = () => {
         <Route path="/register" element={<Register />} />
         <Route path="/verify" element={<Verify />} />
         <Route path="/profile" element={<Profile />} />
+        <Route path="/doctorprofile" element={<DoctorProfile />} />
       </Routes>
     </>
   );

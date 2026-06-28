@@ -31,6 +31,8 @@ const Login = () => {
       // Save JWT Token
       localStorage.setItem("token", response.data.token);
 
+      navigate("/");
+
       alert(response.data.message);
 
       navigate("/");
