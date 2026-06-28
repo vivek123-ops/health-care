@@ -4,9 +4,7 @@ const getAllDoctors = async (req, res) => {
   try {
     const doctors = await user
       .find({ userType: "doctor" })
-      .select(
-        "-password -disease -medicine -bloodGroup -allergies -emergencyContact",
-      );
+      .select("-password -disease -medicine -bloodgroup");
 
     res.status(200).json({
       success: true,
