@@ -10,6 +10,8 @@ import DoctorProfile from "./Pages/DoctorProfile";
 import Doctors from "./Pages/DoctorPage";
 import BookAppointment from "./Pages/Bookappointment";
 import AppointmentPage from "./Pages/appointment";
+import Emergency from "./Pages/EmergencyPage";
+import EmergencySuccess from "./Pages/ConfirmPage";
 
 const App = () => {
   return (
@@ -22,6 +24,8 @@ const App = () => {
         <Route path="/verify" element={<Verify />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/doctor" element={<Doctors />} />
+        <Route path="/emergency" element={<Emergency />} />
+        <Route path="/emergenceSuccess" element={<EmergencySuccess />} />
         <Route
           path="/bookappointment/:doctorId"
           element={<BookAppointment />}

@@ -9,7 +9,14 @@ const Profile = () => {
     bloodgroup: "",
     height: "",
     address: "",
-    emergencyContact: "",
+    emergencyContacts: [
+      {
+        name: "",
+        relation: "",
+        phone: "",
+        email: "",
+      },
+    ],
     disease: "",
     medicine: "",
   });
@@ -27,10 +34,20 @@ const Profile = () => {
       setUser(response.data.user);
 
       setFormData({
-        bloodGroup: response.data.user.bloodgroup || "",
+        bloodgroup: response.data.user.bloodgroup || "",
         height: response.data.user.height || "",
         address: response.data.user.address || "",
-        emergencyContact: response.data.user.emergencyContact || "",
+        emergencyContacts:
+          response.data.user.emergencyContacts?.length > 0
+            ? response.data.user.emergencyContacts
+            : [
+                {
+                  name: "",
+                  relation: "",
+                  phone: "",
+                  email: "",
+                },
+              ],
         disease: response.data.user.disease?.join(", ") || "",
         medicine: response.data.user.medicine?.join(", ") || "",
       });
@@ -43,13 +60,23 @@ const Profile = () => {
     getProfile();
   }, []);
 
+  const handleEmergencyChange = (index, e) => {
+    const { name, value } = e.target;
+
+    const contacts = [...formData.emergencyContacts];
+    contacts[index][name] = value;
+
+    setFormData({
+      ...formData,
+      emergencyContacts: contacts,
+    });
+  };
   const handleChange = (e) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
     });
   };
-
   const updateProfile = async () => {
     try {
       const token = localStorage.getItem("token");
@@ -60,11 +87,15 @@ const Profile = () => {
           bloodgroup: formData.bloodgroup,
           height: formData.height,
           address: formData.address,
-          emergencyContact: formData.emergencyContact,
+
+          // ✅ Array send karo
+          emergencyContacts: formData.emergencyContacts,
+
           disease: formData.disease
             .split(",")
             .map((item) => item.trim())
             .filter(Boolean),
+
           medicine: formData.medicine
             .split(",")
             .map((item) => item.trim())
@@ -219,13 +250,77 @@ const Profile = () => {
             style={inputStyle}
           />
 
-          <input
-            name="emergencyContact"
-            value={formData.emergencyContact}
-            onChange={handleChange}
-            placeholder="Emergency Contact"
-            style={inputStyle}
-          />
+          {formData.emergencyContacts.map((contact, index) => (
+            <div
+              key={index}
+              style={{
+                border: "1px solid #ddd",
+                padding: "15px",
+                marginTop: "15px",
+                borderRadius: "10px",
+              }}
+            >
+              <input
+                name="name"
+                placeholder="Name"
+                value={contact.name}
+                onChange={(e) => handleEmergencyChange(index, e)}
+                style={inputStyle}
+              />
+
+              <input
+                name="relation"
+                placeholder="Relation"
+                value={contact.relation}
+                onChange={(e) => handleEmergencyChange(index, e)}
+                style={inputStyle}
+              />
+
+              <input
+                name="phone"
+                placeholder="Phone"
+                value={contact.phone}
+                onChange={(e) => handleEmergencyChange(index, e)}
+                style={inputStyle}
+              />
+
+              <input
+                name="email"
+                placeholder="Email"
+                value={contact.email}
+                onChange={(e) => handleEmergencyChange(index, e)}
+                style={inputStyle}
+              />
+            </div>
+          ))}
+          <button
+            type="button"
+            onClick={() =>
+              setFormData({
+                ...formData,
+                emergencyContacts: [
+                  ...formData.emergencyContacts,
+                  {
+                    name: "",
+                    relation: "",
+                    phone: "",
+                    email: "",
+                  },
+                ],
+              })
+            }
+            style={{
+              marginTop: "15px",
+              padding: "10px 20px",
+              background: "#0D6EFD",
+              color: "#fff",
+              border: "none",
+              borderRadius: "6px",
+              cursor: "pointer",
+            }}
+          >
+            + Add Emergency Contact
+          </button>
 
           <input
             name="disease"

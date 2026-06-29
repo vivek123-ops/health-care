@@ -24,35 +24,38 @@ const getprofile = async (req, res) => {
     });
   }
 };
-
 const updateProfile = async (req, res) => {
   try {
     const {
-      bloodGroup,
+      bloodgroup,
       disease,
       medicine,
-      allergies,
       height,
-      weight,
       address,
-      emergencyContact,
+      emergencyContacts,
     } = req.body;
+
     const findUser = await userModule.findById(req.userId).select("-password");
+
     if (!findUser) {
-      return res.status(400).json({
+      return res.status(404).json({
         success: false,
-        message: "user not find ",
+        message: "User not found",
       });
     }
-    findUser.bloodGroup = bloodGroup ?? findUser.bloodGroup;
+
+    // Update User Information
+    findUser.bloodgroup = bloodgroup ?? findUser.bloodgroup;
     findUser.disease = disease ?? findUser.disease;
     findUser.medicine = medicine ?? findUser.medicine;
-    findUser.allergies = allergies ?? findUser.allergies;
     findUser.height = height ?? findUser.height;
-    findUser.weight = weight ?? findUser.weight;
     findUser.address = address ?? findUser.address;
-    findUser.emergencyContact = emergencyContact ?? findUser.emergencyContact;
 
+    // Emergency Contacts
+    findUser.emergencyContacts =
+      emergencyContacts ?? findUser.emergencyContacts;
+
+    // Doctor Information
     if (findUser.userType === "doctor") {
       findUser.specialist = req.body.specialist ?? findUser.specialist;
 
@@ -69,16 +72,20 @@ const updateProfile = async (req, res) => {
 
       findUser.availableTime = req.body.availableTime ?? findUser.availableTime;
     }
+
     await findUser.save();
+
     res.status(200).json({
       success: true,
       message: "Profile Updated Successfully",
       user: findUser,
     });
   } catch (error) {
-    res.status(400).json({
+    console.log(error);
+
+    res.status(500).json({
       success: false,
-      message: "error from updateProfile",
+      message: error.message,
     });
   }
 };

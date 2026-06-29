@@ -52,6 +52,14 @@ const userSchema = new mongoose.Schema(
       enum: ["", "A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"],
       default: "",
     },
+    emergencyContacts: [
+      {
+        relation: String,
+        phone: String,
+        email: String,
+        name: String,
+      },
+    ],
 
     height: {
       type: String,
