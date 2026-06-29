@@ -27,7 +27,7 @@ const Register = () => {
     console.log(userData);
     try {
       const response = await axios.post(
-        "http://localhost:3000/api/register",
+        "https://health-care-3-0hjr.onrender.com/api/register",
         userData,
       );
       alert(response.data.message);

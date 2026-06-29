@@ -17,7 +17,7 @@ const Emergency = () => {
         const token = localStorage.getItem("token");
 
         await axios.post(
-          "http://localhost:3000/api/emergency",
+          "https://health-care-3-0hjr.onrender.com/api/emergency",
           {
             latitude: position.coords.latitude,
             longitude: position.coords.longitude,

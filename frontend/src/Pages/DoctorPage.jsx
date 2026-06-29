@@ -10,11 +10,14 @@ const Doctors = () => {
     try {
       const token = localStorage.getItem("token");
 
-      const response = await axios.get("http://localhost:3000/api/getdoctors", {
-        headers: {
-          authorization: token,
+      const response = await axios.get(
+        "https://health-care-3-0hjr.onrender.com/api/getdoctors",
+        {
+          headers: {
+            authorization: token,
+          },
         },
-      });
+      );
 
       setDoctors(response.data.doctors);
     } catch (error) {

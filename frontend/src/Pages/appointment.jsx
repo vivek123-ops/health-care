@@ -11,7 +11,7 @@ const AppointmentPage = () => {
       const token = localStorage.getItem("token");
 
       const response = await axios.get(
-        "http://localhost:3000/api/myappointments",
+        "https://health-care-3-0hjr.onrender.com/api/myappointments",
         {
           headers: {
             authorization: token,

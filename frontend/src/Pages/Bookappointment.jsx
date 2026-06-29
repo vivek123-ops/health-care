@@ -26,7 +26,7 @@ const BookAppointment = () => {
       const token = localStorage.getItem("token");
 
       const response = await axios.post(
-        "http://localhost:3000/api/bookappointment",
+        "https://health-care-3-0hjr.onrender.com/api/bookappointment",
         {
           doctorId,
           appointmentDate: appointment.appointmentDate,

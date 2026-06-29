@@ -21,11 +21,14 @@ const DoctorProfile = () => {
     try {
       const token = localStorage.getItem("token");
 
-      const response = await axios.get("http://localhost:3000/api/getprofile", {
-        headers: {
-          authorization: token,
+      const response = await axios.get(
+        "https://health-care-3-0hjr.onrender.com/api/getprofile",
+        {
+          headers: {
+            authorization: token,
+          },
         },
-      });
+      );
 
       setUser(response.data.user);
 
@@ -61,7 +64,7 @@ const DoctorProfile = () => {
       const token = localStorage.getItem("token");
 
       await axios.put(
-        "http://localhost:3000/api/updateprofile",
+        "https://health-care-3-0hjr.onrender.com/api/updateprofile",
         {
           specialist: formData.specialist,
           education: formData.education,
