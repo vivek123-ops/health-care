@@ -14,10 +14,13 @@ const Verify = () => {
     e.preventDefault();
 
     try {
-      const response = await axios.post("http://localhost:3000/api/verify", {
-        ...userData,
-        providedOtp: otp,
-      });
+      const response = await axios.post(
+        "https://health-care-3-0hjr.onrender.com/api/verify",
+        {
+          ...userData,
+          providedOtp: otp,
+        },
+      );
 
       alert(response.data.message);
 

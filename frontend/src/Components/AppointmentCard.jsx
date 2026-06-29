@@ -24,7 +24,7 @@ const AppointmentCard = ({ appointment, getMyAppointments }) => {
     const token = localStorage.getItem("token");
     try {
       const response = await axios.put(
-        `http://localhost:3000/api/cancelappointment/${id}`,
+        `https://health-care-3-0hjr.onrender.com/api/cancelappointment/${id}`,
         {},
         {
           headers: {
