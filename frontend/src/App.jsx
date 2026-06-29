@@ -1,6 +1,6 @@
 import React from "react";
 import Navbar from "./Components/Navbar";
-import { Route, Routes } from "react-router-dom";
+import { Route, Router, Routes } from "react-router-dom";
 import HomePage from "./Pages/HomePage";
 import Login from "./Pages/Login";
 import Register from "./Pages/Register";
@@ -8,6 +8,8 @@ import Verify from "./Pages/Verify";
 import Profile from "./Pages/Profile";
 import DoctorProfile from "./Pages/DoctorProfile";
 import Doctors from "./Pages/DoctorPage";
+import BookAppointment from "./Pages/Bookappointment";
+import AppointmentPage from "./Pages/appointment";
 
 const App = () => {
   return (
@@ -20,6 +22,11 @@ const App = () => {
         <Route path="/verify" element={<Verify />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/doctor" element={<Doctors />} />
+        <Route
+          path="/bookappointment/:doctorId"
+          element={<BookAppointment />}
+        />
+        <Route path="/appointment" element={<AppointmentPage />} />
         <Route path="/doctorprofile" element={<DoctorProfile />} />
       </Routes>
     </>

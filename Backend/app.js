@@ -4,6 +4,7 @@ const Auth = require("./routers/AuthRouter");
 const cors = require("cors");
 const user = require("./routers/userRouter");
 const Doctor = require("./routers/DoctorRouter");
+const appointment = require("./routers/AppointmentRouter");
 
 const app = express();
 app.use(cors());
@@ -13,6 +14,7 @@ app.use(express.json());
 app.use("/api", Auth);
 app.use("/api", user);
 app.use("/api", Doctor);
+app.use("/api", appointment);
 
 const server = async (req, res) => {
   try {

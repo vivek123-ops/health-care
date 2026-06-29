@@ -1,16 +1,24 @@
+const express = require("express");
+const appointment = express.Router();
 const verifyUser = require("../middleware/verifyUser");
 const appointmentController = require("../controller/AppointmentController");
+const { verify } = require("jsonwebtoken");
 
-router.post(
-  "/appointment/book",
+appointment.post(
+  "/bookappointment",
   verifyUser,
   appointmentController.bookAppointment,
 );
 
-router.get(
-  "/appointment/my",
+appointment.get(
+  "/myappointments",
   verifyUser,
   appointmentController.getMyAppointments,
 );
+appointment.put(
+  "/cancelappointment/:id",
+  verify,
+  appointmentController.cancelAppointment,
+);
 
-module.exports = router;
+module.exports = appointment;

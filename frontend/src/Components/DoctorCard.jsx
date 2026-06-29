@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 const DoctorCard = ({ doctor }) => {
   return (
@@ -121,22 +122,23 @@ const DoctorCard = ({ doctor }) => {
               </span>
             ))}
           </div>
-
-          <button
-            style={{
-              width: "100%",
-              padding: "14px",
-              background: "#0D6EFD",
-              color: "white",
-              border: "none",
-              borderRadius: "8px",
-              fontSize: "16px",
-              cursor: "pointer",
-              fontWeight: "bold",
-            }}
-          >
-            📅 Book Appointment
-          </button>
+          <Link to={`/bookappointment/${doctor._id}`}>
+            <button
+              style={{
+                width: "100%",
+                padding: "14px",
+                background: "#0D6EFD",
+                color: "white",
+                border: "none",
+                borderRadius: "8px",
+                fontSize: "16px",
+                cursor: "pointer",
+                fontWeight: "bold",
+              }}
+            >
+              📅 Book Appointment
+            </button>
+          </Link>
         </div>
       </div>
     </>
