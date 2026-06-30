@@ -6,7 +6,17 @@ exports.createEmergency = async (req, res) => {
   try {
     const { latitude, longitude, emergencyType } = req.body;
 
-    // Emergency Save
+    console.log("Emergency Request:", req.body);
+    console.log("User ID:", req.userId);
+
+    console.log({
+      patientId: req.userId,
+      latitude,
+      longitude,
+      emergencyType,
+    });
+
+    // Save Emergency
     const emergency = await emergencyModel.create({
       patientId: req.userId,
       latitude,
@@ -14,7 +24,7 @@ exports.createEmergency = async (req, res) => {
       emergencyType,
     });
 
-    // Logged In User
+    // Find Logged In User
     const user = await userModel.findById(req.userId);
 
     if (!user) {
@@ -24,64 +34,82 @@ exports.createEmergency = async (req, res) => {
       });
     }
 
-    // Check Emergency Contact Email
+    console.log("User:", user.username);
+
+    // Emergency Contacts
     const contacts = user.emergencyContacts;
+
+    console.log("Emergency Contacts:", contacts);
+
     if (!contacts || contacts.length === 0) {
       return res.status(400).json({
         success: false,
         message: "No emergency contacts found",
       });
     }
-    console.log("Emergency Contacts:", contacts);
 
     // Google Maps Link
     const mapLink = `https://www.google.com/maps?q=${latitude},${longitude}`;
 
-    // setup nodemailer
+    // Mail Transporter
     const transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
         user: "vivekshrivastav325@gmail.com",
-        pass: "ffussdlyjyalysrr",
+        pass: "ffussdlyjyalysrr", // Replace with process.env.EMAIL_PASS
       },
     });
 
-    // Send Email
+    // SMTP Verify
+    transporter.verify((error, success) => {
+      if (error) {
+        console.log("SMTP Error:", error);
+      } else {
+        console.log("SMTP Connected");
+      }
+    });
+
+    // Send Email to Every Emergency Contact
     for (const contact of contacts) {
       if (!contact.email || contact.email.trim() === "") continue;
 
-      console.log("Sending to:", contact.email);
+      console.log("Sending Mail To:", contact.email);
 
-      await transporter.sendMail({
-        from: "vivekshrivastav325@gmail.com",
-        to: contact.email,
-        subject: "🚨 PulseCare Emergency Alert",
-        text: `
-          EMERGENCY ALERT
+      try {
+        const info = await transporter.sendMail({
+          from: "vivekshrivastav325@gmail.com",
+          to: contact.email,
+          subject: "🚨 PulseCare Emergency Alert",
 
-          Patient: ${user.username}
+          text: `
+🚨 EMERGENCY ALERT
 
-          Emergency Type: ${emergencyType}
+Patient Name: ${user.username}
 
-            Location:
-          ${mapLink}
+Emergency Type: ${emergencyType}
+
+Current Location:
+${mapLink}
 
 Please contact the patient immediately.
-    `,
-      });
+          `,
+        });
 
-      console.log("Mail sent to:", contact.email);
+        console.log("Mail Sent:", info.response);
+      } catch (mailError) {
+        console.log("Mail Error:", mailError);
+      }
     }
 
-    res.status(201).json({
+    return res.status(201).json({
       success: true,
-      message: "Emergency created and email sent successfully.",
+      message: "Emergency Created Successfully",
       emergency,
     });
   } catch (error) {
-    console.log(error);
+    console.log("Emergency Error:", error);
 
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       message: error.message,
     });

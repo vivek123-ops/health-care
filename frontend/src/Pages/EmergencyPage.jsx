@@ -12,27 +12,61 @@ const Emergency = () => {
       return;
     }
 
+    if (!navigator.geolocation) {
+      alert("Geolocation is not supported in this browser.");
+      return;
+    }
+
     navigator.geolocation.getCurrentPosition(
       async (position) => {
-        const token = localStorage.getItem("token");
+        try {
+          const token = localStorage.getItem("token");
 
-        await axios.post(
-          "https://health-care-3-0hjr.onrender.com/api/emergency",
-          {
-            latitude: position.coords.latitude,
-            longitude: position.coords.longitude,
-            emergencyType: reason,
-          },
-          {
-            headers: {
-              authorization: token,
+          console.log("Latitude:", position.coords.latitude);
+          console.log("Longitude:", position.coords.longitude);
+          console.log("Reason:", reason);
+
+          const response = await axios.post(
+            "https://health-care-3-0hjr.onrender.com/api/emergency",
+            {
+              latitude: position.coords.latitude,
+              longitude: position.coords.longitude,
+              emergencyType: reason,
             },
-          },
-        );
+            {
+              headers: {
+                authorization: token,
+              },
+            },
+          );
 
-        navigate("/emergenceSuccess");
+          console.log("Response:", response.data);
+
+          alert(response.data.message);
+
+          navigate("/emergenceSuccess");
+        } catch (error) {
+          console.log("Axios Error:", error);
+
+          if (error.response) {
+            console.log("Status:", error.response.status);
+            console.log("Data:", error.response.data);
+
+            alert(error.response.data.message);
+          } else if (error.request) {
+            console.log("No Response:", error.request);
+
+            alert("Backend server is not responding.");
+          } else {
+            console.log("Error:", error.message);
+
+            alert(error.message);
+          }
+        }
       },
-      () => {
+      (error) => {
+        console.log("Location Error:", error);
+
         alert("Please allow location access.");
       },
     );
@@ -44,12 +78,20 @@ const Emergency = () => {
         maxWidth: "500px",
         margin: "60px auto",
         padding: "30px",
-        borderRadius: "10px",
-        boxShadow: "0 0 10px rgba(0,0,0,.2)",
+        borderRadius: "12px",
         background: "#fff",
+        boxShadow: "0 5px 15px rgba(0,0,0,0.2)",
       }}
     >
-      <h2 style={{ textAlign: "center", color: "red" }}>🚨 Emergency SOS</h2>
+      <h2
+        style={{
+          textAlign: "center",
+          color: "red",
+          marginBottom: "20px",
+        }}
+      >
+        🚨 Emergency SOS
+      </h2>
 
       <label>
         <b>Select Emergency Reason</b>
@@ -60,9 +102,10 @@ const Emergency = () => {
         onChange={(e) => setReason(e.target.value)}
         style={{
           width: "100%",
-          padding: "10px",
+          padding: "12px",
           marginTop: "10px",
-          marginBottom: "20px",
+          marginBottom: "25px",
+          borderRadius: "8px",
         }}
       >
         <option value="">Select Reason</option>
