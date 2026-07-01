@@ -40,11 +40,19 @@ exports.createEmergency = async (req, res) => {
 
     // Mail Transporter
     const transporter = nodemailer.createTransport({
-      service: "gmail",
+      host: "smtp.gmail.com",
+      port: 587,
+      secure: false, // 587 ke liye false
       auth: {
         user: "vivekshrivastav325@gmail.com",
         pass: "ffussdlyjyalysrr",
       },
+      tls: {
+        rejectUnauthorized: false,
+      },
+      connectionTimeout: 10000, // 10 sec
+      greetingTimeout: 10000,
+      socketTimeout: 10000,
     });
 
     // Send Email to Every Emergency Contact
