@@ -21,11 +21,6 @@ const Emergency = () => {
       async (position) => {
         try {
           const token = localStorage.getItem("token");
-
-          console.log("Latitude:", position.coords.latitude);
-          console.log("Longitude:", position.coords.longitude);
-          console.log("Reason:", reason);
-
           const response = await axios.post(
             "https://health-care-3-0hjr.onrender.com/api/emergency",
             {

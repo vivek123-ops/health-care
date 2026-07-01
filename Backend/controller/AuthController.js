@@ -49,9 +49,11 @@ const register = async (req, res) => {
       message: "OTP is succesful send",
     });
   } catch (error) {
-    console.log(error);
-    res.status(401).json({
-      message: "error from server side",
+    console.error(error);
+
+    res.status(500).json({
+      success: false,
+      message: error.message,
     });
   }
 };
