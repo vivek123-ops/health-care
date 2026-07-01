@@ -2,54 +2,99 @@ const express = require("express");
 const user = require("../module/userModule");
 const otp = require("../module/otpModule");
 const Auth = express.Router();
-const nodemailer = require("nodemailer");
 const { JsonWebTokenError } = require("jsonwebtoken");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
+const { Resend } = require("resend");
 
 const register = async (req, res) => {
   try {
     const { username, age, password, phone, email, userType } = req.body;
+
     const emailexist = await user.findOne({ email });
+
     if (emailexist) {
       return res.status(400).json({
         success: false,
-        message: "user is already exist",
+        message: "User already exists",
       });
     }
-    //check all feild
+
     if (!username || !email || !password || !phone) {
       return res.status(400).json({
         success: false,
         message: "All fields are required",
       });
     }
-    // create otp
+
+    // Generate OTP
     const otpCode = Math.floor(100000 + Math.random() * 900000);
+
     await otp.create({
-      email: email,
+      email,
       otp: otpCode,
     });
-    // setup nodemailer
-    const transporter = nodemailer.createTransport({
-      service: "gmail",
-      auth: {
-        user: "vivekshrivastav325@gmail.com",
-        pass: "ffussdlyjyalysrr",
-      },
-    });
-    await transporter.sendMail({
-      from: " vivekshrivastav325@gmail.com",
+    const resend = new Resend("re_4bRR9rwQ_6aomC8wg81cuoNadggRmaSqD");
+    // Send OTP using Resend
+    const { data, error } = await resend.emails.send({
+      from: "onboarding@resend.dev",
       to: email,
-      subject: "OTP Verification",
-      text: `Your OTP is ${otpCode}`,
+      subject: "🔐 PulseCare OTP Verification",
+      html: `
+        <div style="font-family:Arial,sans-serif;max-width:600px;margin:auto;border:1px solid #ddd;border-radius:10px;overflow:hidden">
+
+          <div style="background:#2563eb;color:white;padding:20px;text-align:center">
+            <h2>PulseCare OTP Verification</h2>
+          </div>
+
+          <div style="padding:20px">
+
+            <p>Hello <b>${username}</b>,</p>
+
+            <p>Use the OTP below to verify your PulseCare account.</p>
+
+            <div style="
+                text-align:center;
+                font-size:34px;
+                font-weight:bold;
+                letter-spacing:8px;
+                color:#2563eb;
+                margin:30px 0;
+            ">
+              ${otpCode}
+            </div>
+
+            <p>This OTP is valid for <b>5 minutes</b>.</p>
+
+            <p>If you did not request this OTP, please ignore this email.</p>
+
+          </div>
+
+          <div style="background:#f5f5f5;padding:15px;text-align:center;color:#666">
+            © PulseCare Healthcare Platform
+          </div>
+
+        </div>
+      `,
     });
+
+    if (error) {
+      console.log(error);
+
+      return res.status(500).json({
+        success: false,
+        message: "Failed to send OTP",
+      });
+    }
+
+    console.log("OTP Mail Sent:", data);
+
     res.status(201).json({
       success: true,
-      message: "OTP is succesful send",
+      message: "OTP sent successfully",
     });
   } catch (error) {
-    console.error(error);
+    console.log(error);
 
     res.status(500).json({
       success: false,

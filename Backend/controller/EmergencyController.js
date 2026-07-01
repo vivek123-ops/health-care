@@ -1,6 +1,6 @@
 const emergencyModel = require("../module/emergencyModule");
 const userModel = require("../module/userModule");
-const nodemailer = require("nodemailer");
+const { Resend } = require("resend");
 
 exports.createEmergency = async (req, res) => {
   try {
@@ -38,31 +38,15 @@ exports.createEmergency = async (req, res) => {
     // Google Maps Link
     const mapLink = `https://www.google.com/maps?q=${latitude},${longitude}`;
 
-    // Mail Transporter
-    const transporter = nodemailer.createTransport({
-      host: "smtp.gmail.com",
-      port: 587,
-      secure: false, // 587 ke liye false
-      auth: {
-        user: "vivekshrivastav325@gmail.com",
-        pass: "ffussdlyjyalysrr",
-      },
-      tls: {
-        rejectUnauthorized: false,
-      },
-      connectionTimeout: 10000, // 10 sec
-      greetingTimeout: 10000,
-      socketTimeout: 10000,
-    });
-
+    const resend = new Resend("re_4bRR9rwQ_6aomC8wg81cuoNadggRmaSqD");
     // Send Email to Every Emergency Contact
     for (const contact of contacts) {
       if (!contact.email || contact.email.trim() === "") continue;
       try {
-        const info = await transporter.sendMail({
-          from: `"PulseCare Emergency" <vivekshrivastav325@gmail.com>`,
+        const { data, error } = await resend.emails.send({
+          from: "onboarding@resend.dev",
           to: contact.email,
-          subject: "🚨 Emergency Alert - PulseCare",
+          subject: "🚨 PulseCare Emergency Alert",
           html: `
       <div style="font-family: Arial, sans-serif; max-width:600px; margin:auto; border:1px solid #ddd; border-radius:10px; overflow:hidden;">
         
@@ -133,8 +117,11 @@ exports.createEmergency = async (req, res) => {
       </div>
     `,
         });
-
-        console.log("Mail Sent:", info.response);
+        if (error) {
+          console.log("Resend Error:", error);
+        } else {
+          console.log("Mail Sent:", data);
+        }
       } catch (mailError) {
         console.log("Mail Error:", mailError);
       }
